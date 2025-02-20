@@ -45,7 +45,7 @@ impl<'a> Parser<'a> {
         }
 
         if !parser.current.is_empty() {
-            parser.args.push(parser.current.clone());
+            parser.args.push(std::mem::take(&mut parser.current));
         }
 
         parser
@@ -61,8 +61,7 @@ impl<'a> Parser<'a> {
             '"' => self.state = State::InDoubleQuote,
             ' ' => {
                 if !self.current.is_empty() {
-                    self.args.push(self.current.clone());
-                    self.current.clear();
+                    self.args.push(std::mem::take(&mut self.current));
                 }
             },
             _ => self.current.push(char),
